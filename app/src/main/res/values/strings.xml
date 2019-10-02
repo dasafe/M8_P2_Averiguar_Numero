@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">AveriguarNumero</string>
     <string name="button">Comprovar</string>
+    <string name="button2">Ranking</string>
 </resources>
