@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Random r = new Random();
-        final int nRandom = r.nextInt(100) + 1;
+        final int nRandom = 2;//r.nextInt(100) + 1;
         final EditText editText = findViewById(R.id.editText);
         final Button button = findViewById(R.id.button);
         final TextView textView = findViewById(R.id.textView);
@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Code here executes on main thread after user presses button
                 String dif;
+                if (editText.getText()!=null){
                 int nIntroducido = Integer.parseInt(editText.getText().toString());
                 if (nIntroducido!=nRandom) {
                     intento++;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     textView.setText(intento + " Intentos" +"\nPista: Tu numero es "+dif);
                     editText.setText("");
-                } else{
+                } else if (nIntroducido==nRandom){
                     intento++;
                     textView.setText("VICTORIA");
                     final Dialog dialog = new Dialog(MainActivity.this);
@@ -52,11 +53,16 @@ public class MainActivity extends AppCompatActivity {
                             String name = user.getText().toString();
                             Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                             String message = name + " - " + Integer.toString(intento);
+                            Main2Activity.ranking.add(message);
                             intent.putExtra(EXTRA_MESSAGE, message);
                             startActivity(intent);
+                            intento = 0;
                         }
                     });
                     dialog.show();
+                }
+            }else{
+                    textView.setText("Introduce un numero");
                 }
 
             }
@@ -65,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendMessage(View view) {
         // Do something in response to button
-        Intent intent = new Intent(this, Main2Activity.class);
+        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
         startActivity(intent);
     }
 }
