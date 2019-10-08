@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Random r = new Random();
-        final int nRandom = 2;//r.nextInt(100) + 1;
+        final int nRandom = r.nextInt(100) + 1;
         final EditText editText = findViewById(R.id.editText);
         final Button button = findViewById(R.id.button);
         final TextView textView = findViewById(R.id.textView);
