@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         editText.setText("");
                     } else if (nIntroducido == nRandom) {
                         intento++;
-                        textView.setText("VICTORIA");
+                        textView.setText("");
                         final Dialog dialog = new Dialog(MainActivity.this);
                         dialog.setContentView(R.layout.dialog_signin);
                         Button button = (Button) dialog.findViewById(R.id.button3);
@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         dialog.show();
+                        editText.setText("");
                     }
                 } else {
                     textView.setText("Introduce un numero");
