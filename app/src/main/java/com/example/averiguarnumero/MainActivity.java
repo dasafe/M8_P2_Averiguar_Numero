@@ -10,7 +10,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import java.io.File;
 import java.util.Random;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 public class MainActivity extends AppCompatActivity {
     static int intento = 0;
@@ -54,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                                 String name = user.getText().toString();
                                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                                 String message = name + " - " + Integer.toString(intento);
-                                Main2Activity.ranking.add(message);
+                                //Main2Activity.ranking.add(message);
+                                generarXML(message);
                                 intent.putExtra(EXTRA_MESSAGE, message);
                                 startActivity(intent);
                                 intento = 0;
@@ -76,5 +90,38 @@ public class MainActivity extends AppCompatActivity {
         // Do something in response to button
         Intent intent = new Intent(MainActivity.this, Main2Activity.class);
         startActivity(intent);
+    }
+
+    public void generarXML(String message) {
+        String archivo = "ranking.xml";
+        Document doc = null;
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            doc = dBuilder.newDocument();
+
+            Element jugador = doc.createElement("jugador");
+            Attr intentos = doc.createAttribute("intentos");
+            doc.appendChild(jugador);
+            jugador.setAttributeNode(intentos);
+
+            jugador.appendChild(doc.createTextNode(message.split(" - ")[0]));
+            intentos.setValue(message.split(" - ")[1]);
+
+        } catch (ParserConfigurationException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        try {
+            // Creamos el XML
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(new File(MainActivity.this.getFilesDir(), archivo));
+            transformer.transform(source, result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
