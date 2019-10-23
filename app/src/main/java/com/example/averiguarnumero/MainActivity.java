@@ -33,7 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 public class MainActivity extends AppCompatActivity {
     static int intento = 0;
     Random r = new Random();
-    int nRandom = 2; //r.nextInt(100) + 1;
+    int nRandom = r.nextInt(100) + 1;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     @Override
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                                 intent.putExtra(EXTRA_MESSAGE, message);
                                 startActivity(intent);
                                 intento = 0;
-                                nRandom = 2; //r.nextInt(100) + 1;
+                                nRandom = r.nextInt(100) + 1;
                             }
                         });
                         dialog.show();
