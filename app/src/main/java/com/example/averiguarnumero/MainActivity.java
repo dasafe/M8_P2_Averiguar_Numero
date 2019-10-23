@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,8 +14,12 @@ import android.widget.TextView;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -28,7 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 public class MainActivity extends AppCompatActivity {
     static int intento = 0;
     Random r = new Random();
-    int nRandom = r.nextInt(100) + 1;
+    int nRandom = 2; //r.nextInt(100) + 1;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     @Override
@@ -67,12 +72,11 @@ public class MainActivity extends AppCompatActivity {
                                 String name = user.getText().toString();
                                 Intent intent = new Intent(MainActivity.this, Main2Activity.class);
                                 String message = name + " - " + Integer.toString(intento);
-                                //Main2Activity.ranking.add(message);
                                 generarXML(message);
                                 intent.putExtra(EXTRA_MESSAGE, message);
                                 startActivity(intent);
                                 intento = 0;
-                                nRandom = r.nextInt(100) + 1;
+                                nRandom = 2; //r.nextInt(100) + 1;
                             }
                         });
                         dialog.show();
@@ -94,21 +98,29 @@ public class MainActivity extends AppCompatActivity {
 
     public void generarXML(String message) {
         String archivo = "ranking.xml";
-        Document doc = null;
+        org.w3c.dom.Document doc = null;
+        File xml = new File(MainActivity.this.getFilesDir(), archivo);
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            doc = dBuilder.newDocument();
+            doc = dBuilder.parse(xml);
 
+            if (!xml.exists()) {
+                Element jugadores = doc.createElement("jugadores");
+                doc.appendChild(jugadores);
+            }
+
+            NodeList nList = doc.getElementsByTagName("jugadores");
+            Node nNode = nList.item(0);
             Element jugador = doc.createElement("jugador");
             Attr intentos = doc.createAttribute("intentos");
-            doc.appendChild(jugador);
+            nNode.appendChild(jugador);
             jugador.setAttributeNode(intentos);
 
             jugador.appendChild(doc.createTextNode(message.split(" - ")[0]));
             intentos.setValue(message.split(" - ")[1]);
 
-        } catch (ParserConfigurationException e) {
+        } catch (ParserConfigurationException | IOException | SAXException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -118,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(new File(MainActivity.this.getFilesDir(), archivo));
+            StreamResult result = new StreamResult(xml);
             transformer.transform(source, result);
         } catch (Exception e) {
             e.printStackTrace();

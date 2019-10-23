@@ -44,6 +44,7 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     public void burbuja() {
+        ranking.clear();
         String archivo = "ranking.xml";
         File file = new File(Main2Activity.this.getFilesDir(), archivo);
         try {
