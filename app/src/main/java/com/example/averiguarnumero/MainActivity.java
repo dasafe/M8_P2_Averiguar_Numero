@@ -103,11 +103,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-            doc = dBuilder.parse(xml);
+
 
             if (!xml.exists()) {
+                doc = dBuilder.newDocument();
                 Element jugadores = doc.createElement("jugadores");
                 doc.appendChild(jugadores);
+            } else {
+                doc = dBuilder.parse(xml);
             }
 
             NodeList nList = doc.getElementsByTagName("jugadores");
