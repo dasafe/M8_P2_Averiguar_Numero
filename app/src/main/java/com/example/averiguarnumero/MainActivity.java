@@ -36,7 +36,7 @@ import javax.xml.transform.stream.StreamResult;
 public class MainActivity extends AppCompatActivity {
     static int intento = 0;
     Random r = new Random();
-    int nRandom = 2;
+    int nRandom = r.nextInt(100) + 1;
     public static final String EXTRA_MESSAGE = "com.example.myfirstapp.MESSAGE";
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
