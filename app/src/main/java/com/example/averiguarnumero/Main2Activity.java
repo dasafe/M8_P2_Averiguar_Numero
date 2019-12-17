@@ -27,7 +27,7 @@ import javax.xml.transform.stream.StreamResult;
 
 public class Main2Activity extends AppCompatActivity {
 
-    public static ArrayList<String> ranking = new ArrayList<String>();
+    public static ArrayList<Jugador> ranking = new ArrayList<Jugador>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +37,10 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
         burbuja();
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, ranking);
+
         ListView listView = (ListView) findViewById(R.id.lista);
-        listView.setAdapter(itemsAdapter);
-        // Capture the layout's TextView and set the string as its text
+        MyAdapter myAdapter = new MyAdapter(Main2Activity.this, ranking);
+        listView.setAdapter(myAdapter);
     }
 
     public void burbuja() {
@@ -56,7 +56,7 @@ public class Main2Activity extends AppCompatActivity {
                 Node nNode = nList.item(temp);
                 if (nNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element eElement = (Element) nNode;
-                    ranking.add(eElement.getTextContent() + " - " + eElement.getAttribute("intentos"));
+                    ranking.add(new Jugador(eElement.getTextContent() + " - " + eElement.getAttribute("intentos"), eElement.getAttribute("foto")));
                 }
             }
         } catch (Exception e) {
@@ -64,11 +64,11 @@ public class Main2Activity extends AppCompatActivity {
         }
 
         int i, j, p1, p2;
-        String aux;
+        Jugador aux;
         for (i = 0; i < ranking.size() - 1; i++) {
             for (j = 0; j < ranking.size() - i - 1; j++) {
-                p1 = Integer.parseInt(ranking.get(j).split(" - ")[1]);
-                p2 = Integer.parseInt(ranking.get(j + 1).split(" - ")[1]);
+                p1 = Integer.parseInt(ranking.get(j).getNombre().split(" - ")[1]);
+                p2 = Integer.parseInt(ranking.get(j + 1).getNombre().split(" - ")[1]);
                 if (p2 < p1) {
                     aux = ranking.get(j + 1);
                     ranking.set(j + 1, ranking.get(j));
